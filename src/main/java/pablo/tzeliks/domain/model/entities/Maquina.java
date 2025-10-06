@@ -2,14 +2,14 @@ package pablo.tzeliks.domain.model.entities;
 
 import pablo.tzeliks.domain.model.enums.StatusOperacional;
 
-public class maquina {
+public class Maquina {
 
     long id;
     String name;
     String setor;
     StatusOperacional status;
 
-    public maquina(long id, String name, String setor, StatusOperacional status) {
+    public Maquina(long id, String name, String setor, StatusOperacional status) {
         this.id = id;
         this.name = name;
         this.setor = setor;

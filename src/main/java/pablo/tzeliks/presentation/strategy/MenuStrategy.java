@@ -5,5 +5,4 @@ import java.util.Scanner;
 public interface MenuStrategy {
 
     public String getDescription();
-    public void execute(Scanner scanner);
 }

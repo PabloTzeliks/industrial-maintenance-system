@@ -20,10 +20,14 @@ public class MaquinaServiceImpl implements MaquinaService {
     @Override
     public void registrarMaquina(MaquinaRequestDTO dto) {
 
-        if (maquinaRepository.existsDuplicate(dto.nome(), dto.setor())) throw new MaquinaAlreadyExistsException("Essa máquina já existe nesse Setor.");
+        System.out.println("Registrando maquina");
 
-        Maquina novaMaquina = maquinaMapper.toEntity(dto);
+        System.out.println("Maquina: " + dto.nome());
 
-        maquinaRepository.save(novaMaquina);
+//        if (maquinaRepository.existsDuplicate(dto.nome(), dto.setor())) throw new MaquinaAlreadyExistsException("Essa máquina já existe nesse Setor.");
+//
+//        Maquina novaMaquina = maquinaMapper.toEntity(dto);
+//
+//        maquinaRepository.save(novaMaquina);
     }
 }

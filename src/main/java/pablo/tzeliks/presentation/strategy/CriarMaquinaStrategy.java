@@ -8,24 +8,17 @@ import java.util.Scanner;
 
 public class CriarMaquinaStrategy implements MenuStrategy {
 
-    private final MaquinaService maquinaService;
-
-    public CriarMaquinaStrategy(MaquinaService maquinaService) {
-        this.maquinaService = maquinaService;
-    }
-
     @Override
     public String getDescription() {
         return "Criar Máquina";
     }
 
-    @Override
-    public void execute(Scanner scanner) {
+    public static void execute(Scanner scanner, MaquinaService maquinaService) {
 
         CriarMaquinaScreen screen = new CriarMaquinaScreen();
 
         MaquinaRequestDTO requestDTO = screen.display(scanner);
 
-
+        maquinaService.registrarMaquina(requestDTO);
     }
 }

@@ -6,6 +6,6 @@ import pablo.tzeliks.domain.model.entities.Maquina;
 
 public interface MaquinaMapper {
 
-    Maquina toDto(MaquinaRequestDTO dto);
-    MaquinaRequestDTO toRequestDto(TecnicoRequestDTO dto);
+    Maquina toEntity(MaquinaRequestDTO dto);
+    MaquinaRequestDTO toDto(Maquina maquina);
 }

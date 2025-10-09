@@ -1,6 +1,6 @@
 package pablo.tzeliks.domain.model.enums;
 
-public enum StatusOperacional {
+public enum StatusOperacional implements DisplayEnum {
 
     OPERACIONAL("Operacional"),
     EM_ANDAMENTO("Em Andamento");
@@ -11,7 +11,8 @@ public enum StatusOperacional {
         this.nome = nome;
     }
 
-    public String getNome() {
+    @Override
+    public String getDisplayNome() {
         return nome;
     }
 }

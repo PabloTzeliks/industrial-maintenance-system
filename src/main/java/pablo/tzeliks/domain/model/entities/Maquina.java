@@ -1,15 +1,16 @@
 package pablo.tzeliks.domain.model.entities;
 
+import pablo.tzeliks.domain.model.enums.Setor;
 import pablo.tzeliks.domain.model.enums.StatusOperacional;
 
 public class Maquina {
 
     long id;
     String name;
-    String setor;
+    Setor setor;
     StatusOperacional status;
 
-    public Maquina(long id, String name, String setor, StatusOperacional status) {
+    public Maquina(long id, String name, Setor setor, StatusOperacional status) {
         this.id = id;
         this.name = name;
         this.setor = setor;
@@ -32,11 +33,11 @@ public class Maquina {
         this.name = name;
     }
 
-    public String getSetor() {
+    public Setor getSetor() {
         return setor;
     }
 
-    public void setSetor(String setor) {
+    public void setSetor(Setor setor) {
         this.setor = setor;
     }
 

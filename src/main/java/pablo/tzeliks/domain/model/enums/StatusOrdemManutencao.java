@@ -1,6 +1,6 @@
 package pablo.tzeliks.domain.model.enums;
 
-public enum StatusOrdemManutencao {
+public enum StatusOrdemManutencao implements DisplayEnum {
 
     PENDENTE("Pendente"),
     EXECUTADA("Executada"),
@@ -12,7 +12,8 @@ public enum StatusOrdemManutencao {
         this.nome = nome;
     }
 
-    public String getNome() {
+    @Override
+    public String getDisplayNome() {
         return nome;
     }
 }

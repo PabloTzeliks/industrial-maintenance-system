@@ -4,12 +4,12 @@ public class Tecnico {
 
     private long id;
     private String nome;
-    private double estoque;
+    private String especialidade;
 
-    public Tecnico(long id, String nome, double estoque) {
+    public Tecnico(long id, String nome, String especialidade) {
         this.id = id;
         this.nome = nome;
-        this.estoque = estoque;
+        this.especialidade = especialidade;
     }
 
     public long getId() {
@@ -28,12 +28,12 @@ public class Tecnico {
         this.nome = nome;
     }
 
-    public double getEstoque() {
-        return estoque;
+    public String getEspecialidade() {
+        return especialidade;
     }
 
-    public void setEstoque(double estoque) {
-        this.estoque = estoque;
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Tecnico {
         return "Tecnico{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
-                ", estoque=" + estoque +
+                ", especialidade='" + especialidade + '\'' +
                 '}';
     }
 }

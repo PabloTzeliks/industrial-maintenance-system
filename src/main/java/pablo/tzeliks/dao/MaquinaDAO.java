@@ -2,12 +2,15 @@ package pablo.tzeliks.dao;
 
 import pablo.tzeliks.dao.connection.Conexao;
 import pablo.tzeliks.model.Maquina;
+import pablo.tzeliks.model.enums.StatusMaquina;
 import pablo.tzeliks.view.helper.MensagemHelper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MaquinaDAO {
 
@@ -60,5 +63,40 @@ public class MaquinaDAO {
 
             MensagemHelper.erro("Ocorreu um erro ao inserir uma máquina, observe: " + e.getMessage());
         }
+    }
+
+    public List<Maquina> listarMaquinasPorStatus(StatusMaquina status) {
+
+        List<Maquina> maquinas = new ArrayList<>();
+
+        String sql = """
+                SELECT id, nome, setor, status FROM Maquina
+        """;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                long id = rs.getLong(1);
+                String nome = rs.getString(2);
+                String setor = rs.getString(3);
+                StatusMaquina statusMaquina = StatusMaquina.valueOf(rs.getString(4));
+
+                if (statusMaquina.equals(status)) {
+
+                    Maquina maquina = new Maquina(id, nome, setor, statusMaquina);
+                    maquinas.add(maquina);
+                }
+            }
+
+        } catch (SQLException e) {
+
+            MensagemHelper.erro("Ocorreu um erro ao buscar Máquina por Status, observe: " + e.getMessage());
+        }
+
+        return maquinas;
     }
 }

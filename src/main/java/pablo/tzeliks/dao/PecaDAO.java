@@ -2,6 +2,7 @@ package pablo.tzeliks.dao;
 
 import pablo.tzeliks.dao.connection.Conexao;
 import pablo.tzeliks.model.Maquina;
+import pablo.tzeliks.model.Peca;
 import pablo.tzeliks.view.helper.MensagemHelper;
 
 import java.sql.Connection;
@@ -11,17 +12,16 @@ import java.sql.SQLException;
 
 public class PecaDAO {
 
-    public boolean existeMaquina(String nome, String setor) {
+    public boolean existePeca(String nome) {
 
         String sql = """
-                SELECT COUNT(*) FROM Maquina WHERE nome = ? AND setor = ?;
+                SELECT COUNT(*) FROM Peca WHERE nome = ?;
                 """;
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome);
-            stmt.setString(2, setor);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -34,31 +34,30 @@ public class PecaDAO {
 
         } catch (SQLException e) {
 
-            MensagemHelper.erro("Ocorreu um erro ao verificar se a Máquina é elegível ao cadastrar, observe: " + e.getMessage());
+            MensagemHelper.erro("Ocorreu um erro ao verificar se a Peça é elegível ao cadastrar, observe: " + e.getMessage());
             return true;
         }
 
         return false;
     }
 
-    public void save(Maquina maquina) {
+    public void save(Peca peca) {
 
         String sql = """
-                INSERT INTO Maquina (nome, setor, status) VALUES (?, ?, ?);
+                INSERT INTO Peca (nome, estoque) VALUES (?, ?);
         """;
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, maquina.getNome());
-            stmt.setString(2, maquina.getSetor());
-            stmt.setString(3, maquina.getStatus().name());
+            stmt.setString(1, peca.getNome());
+            stmt.setDouble(2, peca.getEstoque());
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
 
-            MensagemHelper.erro("Ocorreu um erro ao inserir uma máquina, observe: " + e.getMessage());
+            MensagemHelper.erro("Ocorreu um erro ao inserir uma peça, observe: " + e.getMessage());
         }
     }
 }

@@ -50,11 +50,9 @@ public class Maquina {
 
     @Override
     public String toString() {
-        return "Maquina{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", setor='" + setor + '\'' +
-                ", status=" + status +
-                '}';
+        return "ID: " + id +
+                "\nNome: " + nome +
+                "\nSetor: " + setor +
+                "\nStatus: " + status;
     }
 }

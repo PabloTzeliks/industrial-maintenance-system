@@ -37,4 +37,19 @@ public class InputHelper {
             }
         }
     }
+
+    public static double lerDouble(Scanner sc, String prompt) {
+        while (true) {
+
+            System.out.println(prompt + " ");
+
+            String input = sc.nextLine();
+
+            try {
+                return Double.parseDouble(input.trim());
+            } catch (NumberFormatException e) {
+                MensagemHelper.erro("Valor inválido. Tente novamente!");
+            }
+        }
+    }
 }

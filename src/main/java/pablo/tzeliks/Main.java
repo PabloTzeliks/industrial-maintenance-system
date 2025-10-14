@@ -1,6 +1,7 @@
 package pablo.tzeliks;
 
 import pablo.tzeliks.dao.MaquinaDAO;
+import pablo.tzeliks.dao.OrdemManutencaoDAO;
 import pablo.tzeliks.dao.PecaDAO;
 import pablo.tzeliks.dao.TecnicoDAO;
 import pablo.tzeliks.model.Maquina;
@@ -10,16 +11,20 @@ import pablo.tzeliks.model.enums.StatusMaquina;
 import pablo.tzeliks.view.helper.InputHelper;
 import pablo.tzeliks.view.helper.MensagemHelper;
 import pablo.tzeliks.view.helper.MenuHelper;
+import pablo.tzeliks.view.helper.PrintHelper;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+
         MaquinaDAO maquinaDAO = new MaquinaDAO();
         TecnicoDAO tecnicoDAO = new TecnicoDAO();
         PecaDAO pecaDAO = new PecaDAO();
+        OrdemManutencaoDAO ordemManutencaoDAO = new OrdemManutencaoDAO();
 
         while (true) {
             MenuHelper.menuPrincipal();
@@ -37,6 +42,8 @@ public class Main {
                 case "3":
                     cadastrarPeca(sc, pecaDAO);
                     break;
+                case "4":
+                    criarOrdemManutencao(sc, maquinaDAO, ordemManutencaoDAO);
                 case "0":
                     MensagemHelper.info("Saindo...");
                     return;
@@ -53,12 +60,12 @@ public class Main {
 
         MenuHelper.menuCadastroMaquina();
 
-        String nomeMaquina = InputHelper.lerString(sc, "Digite o nome do maquina: ");
-        String setorMaquina = InputHelper.lerString(sc, "Digite o nome do setor: ");
+        String nomeMaquina = InputHelper.lerString(sc, "Digite o nome do Máquina: ");
+        String setorMaquina = InputHelper.lerString(sc, "Digite o nome do Setor: ");
 
         if (dao.existeMaquina(nomeMaquina, setorMaquina)) {
 
-            MensagemHelper.erro("Máquina já cadastrada neste Setor.");
+            MensagemHelper.erro("Máquina já Cadastrada neste Setor.");
             return;
         }
 
@@ -75,12 +82,12 @@ public class Main {
 
         MenuHelper.menuCadastroTecnico();
 
-        String nomeTecnico = InputHelper.lerString(sc, "Digite o nome do tecnico: ");
+        String nomeTecnico = InputHelper.lerString(sc, "Digite o nome do Técnico: ");
         String especialidadeTecnico = InputHelper.lerStringPodeNull(sc, "Digite o nome da especialidade: ");
 
         if (dao.existeTecnico(nomeTecnico, especialidadeTecnico)) {
 
-            MensagemHelper.erro("Técnico já cadastrado no Sistema.");
+            MensagemHelper.erro("Técnico já Cadastrado no Sistema.");
             return;
         }
 
@@ -88,24 +95,49 @@ public class Main {
 
         dao.save(tecnico);
 
-        MensagemHelper.sucesso("Tecnico Cadastrada com sucesso!");
+        MensagemHelper.sucesso("Técnico Cadastrada com sucesso!");
     }
 
     public static void cadastrarPeca(Scanner sc, PecaDAO dao) {
 
         sc.nextLine();
 
-        MenuHelper.menuCadastroTecnico();
+        MenuHelper.menuCadastroPeca();
 
-        String nomePeca = InputHelper.lerString(sc, "Digite o nome do tecnico: ");
-        String estoquePeca = InputHelper.lerStringPodeNull(sc, "Digite o nome da especialidade: ");
+        String nomePeca = InputHelper.lerString(sc, "Digite o nome da Peça: ");
+        double estoquePeca = InputHelper.lerDouble(sc, "Digite a quantidade do Estoque (Em Kg): ");
 
+        if (estoquePeca <= 0) {
 
+            MensagemHelper.erro("Quantidade de estoque da Peça deve ser maior que Zero.");
+            return;
+        }
 
-        Peca peca = new Peca();
+        if (dao.existePeca(nomePeca)) {
+
+            MensagemHelper.erro("Peça já cadastrada no Sistema.");
+            return;
+        }
+
+        Peca peca = new Peca(0, nomePeca, estoquePeca);
 
         dao.save(peca);
 
         MensagemHelper.sucesso("Peça Cadastrada com sucesso!");
+    }
+
+    public static void criarOrdemManutencao(Scanner sc, MaquinaDAO maquinaDAO, OrdemManutencaoDAO ordemDAO) {
+
+        sc.nextLine();
+
+        MenuHelper.menuCriarOrdemDeManutenao();
+
+        MensagemHelper.subtitulo("Listagem de Máquinas");
+
+        List<Maquina> maquinas = maquinaDAO.listarMaquinasPorStatus(StatusMaquina.OPERACIONAL);
+
+        PrintHelper.printListaMaquinas(maquinas);
+
+        MensagemHelper.sucesso("Ordem de Manutenção Criada com Sucesso!");
     }
 }

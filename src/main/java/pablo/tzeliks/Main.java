@@ -14,6 +14,7 @@ import pablo.tzeliks.view.helper.MenuHelper;
 import pablo.tzeliks.view.helper.PrintHelper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -132,11 +133,32 @@ public class Main {
 
         MenuHelper.menuCriarOrdemDeManutenao();
 
+        // Listagem de Máquinas
+
         MensagemHelper.subtitulo("Listagem de Máquinas");
 
         List<Maquina> maquinas = maquinaDAO.listarMaquinasPorStatus(StatusMaquina.OPERACIONAL);
 
         PrintHelper.printListaMaquinas(maquinas);
+
+        // Escolha da Máquina
+
+        MensagemHelper.subtitulo("Escolha a Máquina");
+
+        long inputMaquina = InputHelper.lerLong(sc, "Digite o ID da Máquina desejada: ");
+        Optional<Maquina> maquinaOptional = maquinaDAO.buscarPorId(inputMaquina);
+
+        if (maquinaOptional.isPresent()) {
+
+            Maquina maquinaSelecionada = maquinaOptional.get();
+
+            MensagemHelper.sucesso("Máquina com ID: " + inputMaquina + ", foi selecionada.");
+
+            PrintHelper.printMaquina(maquinaSelecionada);
+        } else {
+
+            MensagemHelper.erro("Máquina com ID: " + inputMaquina + ", não encontrada.");
+        }
 
         MensagemHelper.sucesso("Ordem de Manutenção Criada com Sucesso!");
     }

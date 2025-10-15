@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MaquinaDAO {
 
@@ -98,5 +99,35 @@ public class MaquinaDAO {
         }
 
         return maquinas;
+    }
+
+    public Optional<Maquina> buscarPorId(long id) {
+
+        String sql = """
+                SELECT id, nome, setor, status FROM Maquina WHERE id = ?;
+                """;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                long idMaquina = id;
+                String nome = rs.getString(2);
+                String setor = rs.getString(3);
+                StatusMaquina statusMaquina = StatusMaquina.valueOf(rs.getString(4));
+
+                return Optional.of(new Maquina(id, nome, setor, statusMaquina));
+            }
+
+        } catch (SQLException e) {
+            MensagemHelper.erro("Ocorreu um erro ao buscar Máquina por ID, observe:" + e.getMessage());
+        }
+
+        return Optional.empty();
     }
 }

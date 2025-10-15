@@ -38,6 +38,21 @@ public class InputHelper {
         }
     }
 
+    public static long lerLong(Scanner sc, String prompt) {
+        while (true) {
+
+            System.out.println(prompt + " ");
+
+            String input = sc.nextLine();
+
+            try {
+                return Long.parseLong(input.trim());
+            } catch (NumberFormatException e) {
+                MensagemHelper.erro("Valor inválido. Tente novamente!");
+            }
+        }
+    }
+
     public static double lerDouble(Scanner sc, String prompt) {
         while (true) {
 

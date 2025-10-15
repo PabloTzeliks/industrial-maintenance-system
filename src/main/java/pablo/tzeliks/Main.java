@@ -139,6 +139,12 @@ public class Main {
 
         List<Maquina> maquinas = maquinaDAO.listarMaquinasPorStatus(StatusMaquina.OPERACIONAL);
 
+        if (maquinas.isEmpty()) {
+
+            MensagemHelper.erro("Não há Máquinas no Sistema.");
+            return;
+        }
+
         PrintHelper.printListaMaquinas(maquinas);
 
         // Escolha da Máquina
@@ -157,9 +163,9 @@ public class Main {
             PrintHelper.printMaquina(maquinaSelecionada);
         } else {
 
-            MensagemHelper.erro("Máquina com ID: " + inputMaquina + ", não encontrada.");
+            MensagemHelper.erro("Máquina com ID: " + inputMaquina + ", não encontrada. Tente novamente.");
         }
 
-        MensagemHelper.sucesso("Ordem de Manutenção Criada com Sucesso!");
+        MensagemHelper.sucesso("Sucesso");
     }
 }

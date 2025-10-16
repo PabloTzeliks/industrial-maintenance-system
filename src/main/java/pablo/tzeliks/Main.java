@@ -47,6 +47,7 @@ public class Main {
                     break;
                 case "4":
                     criarOrdemManutencao(sc, maquinaDAO, tecnicoDAO, ordemManutencaoDAO);
+                    break;
                 case "0":
                     MensagemHelper.info("Saindo...");
                     return;
@@ -178,12 +179,13 @@ public class Main {
 
         List<Tecnico> tecnicos = tecnicoDAO.listarTecnicos();
 
-        if (maquinas.isEmpty()) {
+        if (tecnicos.isEmpty()) {
 
             MensagemHelper.erro("Não há Máquinas no Sistema.");
-
             return;
         }
+
+        PrintHelper.printListaTecnicos(tecnicos);
 
         // Escolha do Técnico
 
@@ -212,9 +214,9 @@ public class Main {
 
         OrdemManutencao ordemManutencao = new OrdemManutencao(0, maquinaSelecionada, tecnicoSelecionado, StatusOrdemManutencao.PENDENTE);
 
-
+        ordemDAO.salvar(ordemManutencao);
 
         // Mensagem final
-        MensagemHelper.sucesso("Sucesso");
+        MensagemHelper.sucesso("Ordem de Manutenção Cadastrada com Sucesso!");
     }
 }

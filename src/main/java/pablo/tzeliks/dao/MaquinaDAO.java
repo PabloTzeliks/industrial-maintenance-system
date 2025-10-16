@@ -45,7 +45,7 @@ public class MaquinaDAO {
         return false;
     }
 
-    public void save(Maquina maquina) {
+    public void salvar(Maquina maquina) {
 
         String sql = """
                 INSERT INTO Maquina (nome, setor, status) VALUES (?, ?, ?);

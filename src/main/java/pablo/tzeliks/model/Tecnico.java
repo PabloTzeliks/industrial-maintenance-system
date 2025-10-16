@@ -38,10 +38,8 @@ public class Tecnico {
 
     @Override
     public String toString() {
-        return "Tecnico{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", especialidade='" + especialidade + '\'' +
-                '}';
+        return "ID: " + id +
+                "Nome: " + nome +
+                "Especialidade=" + especialidade;
     }
 }

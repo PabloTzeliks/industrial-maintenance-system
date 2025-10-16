@@ -41,7 +41,7 @@ public class PecaDAO {
         return false;
     }
 
-    public void save(Peca peca) {
+    public void salvar(Peca peca) {
 
         String sql = """
                 INSERT INTO Peca (nome, estoque) VALUES (?, ?);

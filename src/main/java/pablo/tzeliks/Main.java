@@ -166,6 +166,15 @@ public class Main {
             MensagemHelper.erro("Máquina com ID: " + inputMaquina + ", não encontrada. Tente novamente.");
         }
 
+        // Listagem Técnicos
+
+
+
+        // Escolha do Técnico
+
+
+
+        // Mensagem final
         MensagemHelper.sucesso("Sucesso");
     }
 }

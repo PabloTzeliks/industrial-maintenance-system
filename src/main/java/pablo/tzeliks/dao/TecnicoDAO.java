@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class TecnicoDAO {
 
@@ -46,7 +49,7 @@ public class TecnicoDAO {
 
         String sql = """
                 INSERT INTO Tecnico (nome, especialidade) VALUES (?, ?);
-        """;
+                """;
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -58,7 +61,56 @@ public class TecnicoDAO {
 
         } catch (SQLException e) {
 
-            MensagemHelper.erro("Ocorreu um erro ao inserir um técnico, observe: " + e.getMessage());
+            MensagemHelper.erro("Ocorreu um erro ao inserir um Técnico, observe: " + e.getMessage());
         }
+    }
+
+    public List<Tecnico> listarTecnico() {
+
+        List<Tecnico> tecnicos = new ArrayList<>();
+
+        String sql = """
+                SELECT id, nome, especialidade FROM Tecnico;
+                """;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Tecnico tecnico = new Tecnico(rs.getLong(1), rs.getString(2), rs.getString(3));
+
+                tecnicos.add(tecnico);
+            }
+
+        } catch (SQLException e) {
+            MensagemHelper.erro("Ocorreu um erro ao listar os Técnicos, observe: " + e.getMessage());
+        }
+
+        return tecnicos;
+    }
+
+    public Optional<Tecnico> acharPorId(long id) {
+
+        String sql = """
+                SELECT id, nome, especialidade FROM Tecnico WHERE id = ?;
+                """;
+        
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            return Optional.of(new Tecnico(rs.getLong("id"), rs.getString("nome"), rs.getString("especialidade")));
+            
+        } catch (SQLException e) {
+            MensagemHelper.erro("Ocorreu um erro ao buscar um Técnico por seu ID, observe: " + e.getMessage());
+        }
+
+        return Optional.empty();
     }
 }

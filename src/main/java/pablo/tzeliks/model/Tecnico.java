@@ -39,7 +39,7 @@ public class Tecnico {
     @Override
     public String toString() {
         return "ID: " + id +
-                "Nome: " + nome +
-                "Especialidade=" + especialidade;
+                "\nNome: " + nome +
+                "\nEspecialidade: " + especialidade;
     }
 }

@@ -105,7 +105,9 @@ public class TecnicoDAO {
 
             ResultSet rs = stmt.executeQuery();
 
-            return Optional.of(new Tecnico(rs.getLong("id"), rs.getString("nome"), rs.getString("especialidade")));
+            if (rs.next()) {
+                return Optional.of(new Tecnico(rs.getLong("id"), rs.getString("nome"), rs.getString("especialidade")));
+            }
             
         } catch (SQLException e) {
             MensagemHelper.erro("Ocorreu um erro ao buscar um Técnico por seu ID, observe: " + e.getMessage());

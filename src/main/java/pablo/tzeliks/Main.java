@@ -5,9 +5,11 @@ import pablo.tzeliks.dao.OrdemManutencaoDAO;
 import pablo.tzeliks.dao.PecaDAO;
 import pablo.tzeliks.dao.TecnicoDAO;
 import pablo.tzeliks.model.Maquina;
+import pablo.tzeliks.model.OrdemManutencao;
 import pablo.tzeliks.model.Peca;
 import pablo.tzeliks.model.Tecnico;
 import pablo.tzeliks.model.enums.StatusMaquina;
+import pablo.tzeliks.model.enums.StatusOrdemManutencao;
 import pablo.tzeliks.view.helper.InputHelper;
 import pablo.tzeliks.view.helper.MensagemHelper;
 import pablo.tzeliks.view.helper.MenuHelper;
@@ -44,7 +46,7 @@ public class Main {
                     cadastrarPeca(sc, pecaDAO);
                     break;
                 case "4":
-                    criarOrdemManutencao(sc, maquinaDAO, ordemManutencaoDAO);
+                    criarOrdemManutencao(sc, maquinaDAO, tecnicoDAO, ordemManutencaoDAO);
                 case "0":
                     MensagemHelper.info("Saindo...");
                     return;
@@ -72,7 +74,7 @@ public class Main {
 
         Maquina maquina = new Maquina(0, nomeMaquina, setorMaquina, StatusMaquina.OPERACIONAL);
 
-        dao.save(maquina);
+        dao.salvar(maquina);
 
         MensagemHelper.sucesso("Maquina Cadastrada com sucesso!");
     }
@@ -94,7 +96,7 @@ public class Main {
 
         Tecnico tecnico = new Tecnico(0, nomeTecnico, especialidadeTecnico);
 
-        dao.save(tecnico);
+        dao.salvar(tecnico);
 
         MensagemHelper.sucesso("Técnico Cadastrada com sucesso!");
     }
@@ -122,12 +124,12 @@ public class Main {
 
         Peca peca = new Peca(0, nomePeca, estoquePeca);
 
-        dao.save(peca);
+        dao.salvar(peca);
 
         MensagemHelper.sucesso("Peça Cadastrada com sucesso!");
     }
 
-    public static void criarOrdemManutencao(Scanner sc, MaquinaDAO maquinaDAO, OrdemManutencaoDAO ordemDAO) {
+    public static void criarOrdemManutencao(Scanner sc, MaquinaDAO maquinaDAO, TecnicoDAO tecnicoDAO, OrdemManutencaoDAO ordemDAO) {
 
         sc.nextLine();
 
@@ -154,9 +156,11 @@ public class Main {
         long inputMaquina = InputHelper.lerLong(sc, "Digite o ID da Máquina desejada: ");
         Optional<Maquina> maquinaOptional = maquinaDAO.buscarPorId(inputMaquina);
 
+        Maquina maquinaSelecionada;
+
         if (maquinaOptional.isPresent()) {
 
-            Maquina maquinaSelecionada = maquinaOptional.get();
+            maquinaSelecionada = maquinaOptional.get();
 
             MensagemHelper.sucesso("Máquina com ID: " + inputMaquina + ", foi selecionada.");
 
@@ -164,13 +168,49 @@ public class Main {
         } else {
 
             MensagemHelper.erro("Máquina com ID: " + inputMaquina + ", não encontrada. Tente novamente.");
+
+            return;
         }
 
         // Listagem Técnicos
 
+        MensagemHelper.subtitulo("Listagem de Técnicos");
 
+        List<Tecnico> tecnicos = tecnicoDAO.listarTecnicos();
+
+        if (maquinas.isEmpty()) {
+
+            MensagemHelper.erro("Não há Máquinas no Sistema.");
+
+            return;
+        }
 
         // Escolha do Técnico
+
+        MensagemHelper.subtitulo("Escolha do Técnicos");
+
+        long tecnicoId = InputHelper.lerLong(sc, "Digite o ID do técnico desejado: ");
+        Optional<Tecnico> tecnico = tecnicoDAO.acharPorId(tecnicoId);
+
+        Tecnico tecnicoSelecionado;
+
+        if (tecnico.isPresent()) {
+
+            tecnicoSelecionado = tecnico.get();
+
+            MensagemHelper.sucesso("Técnico com ID: " + tecnicoId + ", foi selecionado.");
+
+            PrintHelper.printTecnico(tecnicoSelecionado);
+        } else {
+
+            MensagemHelper.erro("Técnico com ID: " + tecnicoId + ", não encontrado. Tente novamente.");
+
+            return;
+        }
+
+        // Construção da Ordem de Manutenção
+
+        OrdemManutencao ordemManutencao = new OrdemManutencao(0, maquinaSelecionada, tecnicoSelecionado, StatusOrdemManutencao.PENDENTE);
 
 
 

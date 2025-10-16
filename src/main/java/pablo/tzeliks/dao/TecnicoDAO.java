@@ -45,7 +45,7 @@ public class TecnicoDAO {
         return false;
     }
 
-    public void save(Tecnico tecnico) {
+    public void salvar(Tecnico tecnico) {
 
         String sql = """
                 INSERT INTO Tecnico (nome, especialidade) VALUES (?, ?);
@@ -65,7 +65,7 @@ public class TecnicoDAO {
         }
     }
 
-    public List<Tecnico> listarTecnico() {
+    public List<Tecnico> listarTecnicos() {
 
         List<Tecnico> tecnicos = new ArrayList<>();
 

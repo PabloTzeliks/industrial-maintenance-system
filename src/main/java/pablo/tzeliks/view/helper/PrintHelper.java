@@ -1,6 +1,7 @@
 package pablo.tzeliks.view.helper;
 
 import pablo.tzeliks.model.Maquina;
+import pablo.tzeliks.model.OrdemManutencao;
 import pablo.tzeliks.model.Tecnico;
 
 import java.util.List;
@@ -18,6 +19,13 @@ public class PrintHelper {
 
         System.out.println("\n+------------------------------+\n");
         System.out.println(tecnico.toString());
+        System.out.println("\n+------------------------------+\n");
+    }
+
+    public static void printOrdemManutencao(OrdemManutencao ordem) {
+
+        System.out.println("\n+------------------------------+\n");
+        System.out.println(ordem.toString());
         System.out.println("\n+------------------------------+\n");
     }
 
@@ -41,6 +49,21 @@ public class PrintHelper {
         for (Tecnico tecnico : tecnicos) {
 
             System.out.println(tecnico.toString());
+
+            System.out.println("\n+------------------------------+\n");
+        }
+    }
+
+    public static void printListaOrdensManutencao(List<OrdemManutencao> ordens) {
+
+        if (ordens.isEmpty()) {
+
+            MensagemHelper.erro("Nenhum Técnico cadastrado no Sistema.");
+        }
+
+        for (OrdemManutencao ordem : ordens) {
+
+            System.out.println(ordem.toString());
 
             System.out.println("\n+------------------------------+\n");
         }

@@ -237,8 +237,27 @@ public class Main {
 
         // Escolhe a Ordem de Manutenção
 
+        MensagemHelper.subtitulo("Escolha de Ordem de Manutenção");
 
+        long ordemManutencaoId = InputHelper.lerLong(sc, "Digite o ID da Ordem de Manutenção desejada: ");
+        Optional<OrdemManutencao> ordemManutencaoOptional = ordemManutencaoDAO.buscarOrdemManutencaoPorId(ordemManutencaoId);
 
+        OrdemManutencao ordemManutencao;
 
+        if (ordemManutencaoOptional.isPresent()) {
+
+            ordemManutencao = ordemManutencaoOptional.get();
+
+            MensagemHelper.sucesso("Ordem de Manutencação de ID: " + ordemManutencaoId + ", foi selecionado.");
+
+            PrintHelper.printOrdemManutencao(ordemManutencao);
+        } else {
+
+            MensagemHelper.erro("Ordem de Manutenção de ID: " + ordemManutencaoId + ", não foi encotrada. Tente novamente.");
+
+            return;
+        }
+
+        // Gerenciar Peças
     }
 }

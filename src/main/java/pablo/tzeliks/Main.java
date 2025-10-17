@@ -15,6 +15,7 @@ import pablo.tzeliks.view.helper.MensagemHelper;
 import pablo.tzeliks.view.helper.MenuHelper;
 import pablo.tzeliks.view.helper.PrintHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -47,6 +48,9 @@ public class Main {
                     break;
                 case "4":
                     criarOrdemManutencao(sc, maquinaDAO, tecnicoDAO, ordemManutencaoDAO);
+                    break;
+                case "5":
+                    associarPecasOrdens(sc, ordemManutencaoDAO);
                     break;
                 case "0":
                     MensagemHelper.info("Saindo...");
@@ -218,5 +222,19 @@ public class Main {
 
         // Mensagem final
         MensagemHelper.sucesso("Ordem de Manutenção Cadastrada com Sucesso!");
+    }
+
+    public static void associarPecasOrdens(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO) {
+
+        MenuHelper.menuAssociacaoPecas();
+
+        // Listagem de Ordens com Status Pendente
+
+        List<OrdemManutencao> ordensManutencaoPendentes = new ArrayList<>();
+        ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);
+
+
+
+
     }
 }

@@ -103,6 +103,9 @@ public class OrdemManutencaoDAO {
                 ordens.add(ordemManutencao);
             }
 
+            stmt.close();
+            rs.close();
+
         } catch (SQLException e) {
 
             MensagemHelper.erro("Ocorreu um erro ao listar Ordens por Status, observe: " + e.getMessage());

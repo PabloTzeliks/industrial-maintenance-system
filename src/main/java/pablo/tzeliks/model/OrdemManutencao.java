@@ -70,12 +70,12 @@ public class OrdemManutencao {
 
     @Override
     public String toString() {
-        return "OrdemManutencao{" +
-                "id=" + id +
-                ", maquina=" + maquina +
-                ", tecnico=" + tecnico +
-                ", dataSolicitacao=" + dataSolicitacao +
-                ", status=" + status +
-                '}';
+        return "ID: " + id +
+                "\nID Máquina: " + maquina.getId() +
+                "\nNome Máquina: " + maquina.getNome() +
+                "\nID Técnico: " + tecnico.getId() +
+                "\nNome Técnico: " + tecnico.getId() +
+                "\nData de Solicitação: " + dataSolicitacao +
+                "\nStatus: " + status.name();
     }
 }

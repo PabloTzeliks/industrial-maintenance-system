@@ -49,4 +49,11 @@ public class MenuHelper {
 
         System.out.println("----- CRIAR ORDEM DE MANUTENÇÃO -----");
     }
+
+    public static void menuAssociacaoPecas() {
+
+        espacador();
+
+        System.out.println("----- ASSOCIAR PEÇAS À ORDEM -----");
+    }
 }

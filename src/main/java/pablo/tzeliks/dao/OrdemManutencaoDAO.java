@@ -12,6 +12,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OrdemManutencaoDAO {
 
@@ -52,9 +53,6 @@ public class OrdemManutencaoDAO {
         }
     }
 
-    // Duas alternativas :
-    // 1. Usa o DAO de Máquina e Técnido com o Achar por ID;
-    // 2. Faz um Join para buscar informações entre tabelas ** Mais performático. <--
     public List<OrdemManutencao> listarOrdensPorStatus(StatusOrdemManutencao status) {
 
         List<OrdemManutencao> ordens = new ArrayList<>();
@@ -112,5 +110,57 @@ public class OrdemManutencaoDAO {
         }
 
         return ordens;
+    }
+
+    public Optional<OrdemManutencao> buscarOrdemManutencaoPorId(long id) {
+
+        String sql = """
+                SELECT 
+                    -- Coluna da Ordem
+                    om.id AS om_id,
+                    om.dataSolicitacao,
+                    om.status,
+                    
+                    -- Coluna da Máquina
+                    m.id AS maquina_id,
+                    m.nome AS maquina_nome,
+                    m.setor AS maquina_setor,
+                    m.status AS maquina_status,
+                    
+                    -- Coluna do Técnico
+                    t.id AS tecnico_id,
+                    t.nome AS tecnico_nome,
+                    t.especialidade AS tecnico_especialidade
+                FROM 
+                    OrdemManutencao om
+                JOIN 
+                    Maquina m ON om.idMaquina = m.id
+                JOIN
+                    Tecnico t ON om.idTecnico = t.id
+                WHERE
+                    om.id = ?;
+        """;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                Maquina maquina = new Maquina(rs.getLong("maquina_id"), rs.getString("maquina_nome"), rs.getString("maquina_setor"), StatusMaquina.valueOf(rs.getString("maquina_status")));
+                Tecnico tecnico = new Tecnico(rs.getLong("tecnico_id"), rs.getString("tecnico_nome"), rs.getString("tecnico_especialidade"));
+
+                return Optional.of(new OrdemManutencao(rs.getLong(1), maquina, tecnico, rs.getTimestamp(4).toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString(5))));
+            }
+
+        } catch (SQLException e) {
+
+            MensagemHelper.erro("Ocorreu um erro ao buscar a Ordem de Manutenção por ID, observe: " + e.getMessage());
+        }
+
+        return Optional.empty();
     }
 }

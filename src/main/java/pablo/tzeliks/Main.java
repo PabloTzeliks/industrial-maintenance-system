@@ -233,6 +233,10 @@ public class Main {
         List<OrdemManutencao> ordensManutencaoPendentes = new ArrayList<>();
         ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);
 
+        PrintHelper.printListaOrdensManutencao(ordensManutencaoPendentes);
+
+        // Escolhe a Ordem de Manutenção
+
 
 
 

@@ -3,6 +3,7 @@ package pablo.tzeliks.dao;
 import pablo.tzeliks.dao.connection.Conexao;
 import pablo.tzeliks.model.Maquina;
 import pablo.tzeliks.model.OrdemManutencao;
+import pablo.tzeliks.model.Tecnico;
 import pablo.tzeliks.model.enums.StatusMaquina;
 import pablo.tzeliks.model.enums.StatusOrdemManutencao;
 import pablo.tzeliks.view.helper.MensagemHelper;
@@ -59,27 +60,47 @@ public class OrdemManutencaoDAO {
         List<OrdemManutencao> ordens = new ArrayList<>();
 
         String sql = """
-                SELECT om.id 
+                SELECT 
+                    -- Coluna da Ordem
+                    om.id AS om_id,
+                    om.dataSolicitacao,
+                    om.status,
+                    
+                    -- Coluna da Máquina
+                    m.id AS maquina_id,
+                    m.nome AS maquina_nome,
+                    m.setor AS maquina_setor,
+                    m.status AS maquina_status,
+                    
+                    -- Coluna do Técnico
+                    t.id AS tecnico_id,
+                    t.nome AS tecnico_nome,
+                    t.especialidade AS tecnico_especialidade
+                FROM 
+                    OrdemManutencao om
+                JOIN 
+                    Maquina m ON om.idMaquina = m.id
+                JOIN
+                    Tecnico t ON om.idTecnico = t.id
+                WHERE
+                    om.status = ?;
         """;
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setString(1, status.name());
+
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
 
-                long id = rs.getLong(1);
-                long idMaquina = rs.getLong(2);
-                long idTecnico = rs.getLong(3);
-                LocalDateTime dataSolicitacao = rs.getTimestamp(4).toLocalDateTime();
-                StatusOrdemManutencao statusOrdemManutencao = StatusOrdemManutencao.valueOf(rs.getString(5));
+                Maquina maquina = new Maquina(rs.getLong("maquina_id"), rs.getString("maquina_nome"), rs.getString("maquina_setor"), StatusMaquina.valueOf(rs.getString("maquina_status")));
+                Tecnico tecnico = new Tecnico(rs.getLong("tecnico_id"), rs.getString("tecnico_nome"), rs.getString("tecnico_especialidade"));
 
-                if (statusOrdemManutencao.equals(status)) {
+                OrdemManutencao ordemManutencao = new OrdemManutencao(rs.getLong(1), maquina, tecnico, rs.getTimestamp(4).toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString(5)));
 
-                    OrdemManutencao ordemManutencao = new OrdemManutencao(id, null, null, dataSolicitacao, statusOrdemManutencao);
-                    ordens.add(ordemManutencao);
-                }
+                ordens.add(ordemManutencao);
             }
 
         } catch (SQLException e) {

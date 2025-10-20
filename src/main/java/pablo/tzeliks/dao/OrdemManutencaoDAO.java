@@ -61,8 +61,8 @@ public class OrdemManutencaoDAO {
                 SELECT 
                     -- Coluna da Ordem
                     om.id AS om_id,
-                    om.dataSolicitacao,
-                    om.status,
+                    om.dataSolicitacao AS dataSolicitacao,
+                    om.status AS status,
                     
                     -- Coluna da Máquina
                     m.id AS maquina_id,
@@ -96,17 +96,16 @@ public class OrdemManutencaoDAO {
                 Maquina maquina = new Maquina(rs.getLong("maquina_id"), rs.getString("maquina_nome"), rs.getString("maquina_setor"), StatusMaquina.valueOf(rs.getString("maquina_status")));
                 Tecnico tecnico = new Tecnico(rs.getLong("tecnico_id"), rs.getString("tecnico_nome"), rs.getString("tecnico_especialidade"));
 
-                OrdemManutencao ordemManutencao = new OrdemManutencao(rs.getLong(1), maquina, tecnico, rs.getTimestamp(4).toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString(5)));
+                OrdemManutencao ordemManutencao = new OrdemManutencao(rs.getLong("om_id"), maquina, tecnico, rs.getTimestamp("dataSolicitacao").toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString("status")));
 
                 ordens.add(ordemManutencao);
             }
 
-            stmt.close();
-            rs.close();
-
         } catch (SQLException e) {
 
             MensagemHelper.erro("Ocorreu um erro ao listar Ordens por Status, observe: " + e.getMessage());
+
+            e.printStackTrace();
         }
 
         return ordens;
@@ -118,8 +117,8 @@ public class OrdemManutencaoDAO {
                 SELECT 
                     -- Coluna da Ordem
                     om.id AS om_id,
-                    om.dataSolicitacao,
-                    om.status,
+                    om.dataSolicitacao AS dataSolicitacao,
+                    om.status AS status,
                     
                     -- Coluna da Máquina
                     m.id AS maquina_id,
@@ -153,7 +152,7 @@ public class OrdemManutencaoDAO {
                 Maquina maquina = new Maquina(rs.getLong("maquina_id"), rs.getString("maquina_nome"), rs.getString("maquina_setor"), StatusMaquina.valueOf(rs.getString("maquina_status")));
                 Tecnico tecnico = new Tecnico(rs.getLong("tecnico_id"), rs.getString("tecnico_nome"), rs.getString("tecnico_especialidade"));
 
-                return Optional.of(new OrdemManutencao(rs.getLong(1), maquina, tecnico, rs.getTimestamp(4).toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString(5))));
+                return Optional.of(new OrdemManutencao(rs.getLong("om_id"), maquina, tecnico, rs.getTimestamp("dataSolicitacao").toLocalDateTime(), StatusOrdemManutencao.valueOf(rs.getString("status"))));
             }
 
         } catch (SQLException e) {

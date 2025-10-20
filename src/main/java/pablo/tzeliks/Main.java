@@ -226,6 +226,8 @@ public class Main {
 
     public static void associarPecasOrdens(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO, PecaDAO pecaDAO) {
 
+        sc.nextLine();
+
         MenuHelper.menuAssociacaoPecas();
 
         // Listagem de Ordens com Status Pendente
@@ -298,7 +300,7 @@ public class Main {
 
             // Decisão
 
-            long escolhaUsuario = InputHelper.lerLong(sc, "Digite 0 caso queira parar de adicionar Peças: ");
+            long escolhaUsuario = InputHelper.lerLong(sc, "\nDigite 0 caso queira parar de adicionar Peças: ");
 
             if (escolhaUsuario == 0) {
                 MensagemHelper.sucesso("Escolha de Peças finalizada.");

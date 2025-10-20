@@ -50,7 +50,7 @@ public class Main {
                     criarOrdemManutencao(sc, maquinaDAO, tecnicoDAO, ordemManutencaoDAO);
                     break;
                 case "5":
-                    associarPecasOrdens(sc, ordemManutencaoDAO);
+                    associarPecasOrdens(sc, ordemManutencaoDAO, pecaDAO);
                     break;
                 case "0":
                     MensagemHelper.info("Saindo...");
@@ -159,7 +159,7 @@ public class Main {
         MensagemHelper.subtitulo("Escolha a Máquina");
 
         long inputMaquina = InputHelper.lerLong(sc, "Digite o ID da Máquina desejada: ");
-        Optional<Maquina> maquinaOptional = maquinaDAO.buscarPorId(inputMaquina);
+        Optional<Maquina> maquinaOptional = maquinaDAO.buscarMaquinaPorId(inputMaquina);
 
         Maquina maquinaSelecionada;
 
@@ -196,7 +196,7 @@ public class Main {
         MensagemHelper.subtitulo("Escolha do Técnicos");
 
         long tecnicoId = InputHelper.lerLong(sc, "Digite o ID do técnico desejado: ");
-        Optional<Tecnico> tecnico = tecnicoDAO.acharPorId(tecnicoId);
+        Optional<Tecnico> tecnico = tecnicoDAO.buscarTecnicoPorId(tecnicoId);
 
         Tecnico tecnicoSelecionado;
 
@@ -224,14 +224,13 @@ public class Main {
         MensagemHelper.sucesso("Ordem de Manutenção Cadastrada com Sucesso!");
     }
 
-    public static void associarPecasOrdens(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO) {
+    public static void associarPecasOrdens(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO, PecaDAO pecaDAO) {
 
         MenuHelper.menuAssociacaoPecas();
 
         // Listagem de Ordens com Status Pendente
 
-        List<OrdemManutencao> ordensManutencaoPendentes = new ArrayList<>();
-        ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);
+        List<OrdemManutencao> ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);;
 
         PrintHelper.printListaOrdensManutencao(ordensManutencaoPendentes);
 
@@ -258,6 +257,31 @@ public class Main {
             return;
         }
 
-        // Gerenciar Peças
+        // Listagem de Peças
+
+        List<Peca> pecas = pecaDAO.listarPecas();
+        PrintHelper.printListaPecas(pecas);
+
+        // Escolha de Peça
+
+        long pecaId = InputHelper.lerLong(sc,  "Digite o ID da Peca desejada: ");
+        Optional<Peca> pecaOptional = pecaDAO.buscarPecaPorId(pecaId);
+
+        Peca pecaEscolhida;
+
+        if (pecaOptional.isPresent()) {
+
+            pecaEscolhida = pecaOptional.get();
+
+            MensagemHelper.sucesso("Peca de ID: " + pecaId + ", foi selecionado.");
+
+            PrintHelper.printPeca(pecaEscolhida);
+        } else {
+
+            MensagemHelper.erro("Peca de ID: " + pecaId + ", não foi encontrada. Tente novamente.");
+
+            return;
+        }
+
     }
 }

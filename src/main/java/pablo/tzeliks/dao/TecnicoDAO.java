@@ -92,7 +92,7 @@ public class TecnicoDAO {
         return tecnicos;
     }
 
-    public Optional<Tecnico> acharPorId(long id) {
+    public Optional<Tecnico> buscarTecnicoPorId(long id) {
 
         String sql = """
                 SELECT id, nome, especialidade FROM Tecnico WHERE id = ?;

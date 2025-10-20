@@ -2,6 +2,7 @@ package pablo.tzeliks.view.helper;
 
 import pablo.tzeliks.model.Maquina;
 import pablo.tzeliks.model.OrdemManutencao;
+import pablo.tzeliks.model.Peca;
 import pablo.tzeliks.model.Tecnico;
 
 import java.util.List;
@@ -26,6 +27,13 @@ public class PrintHelper {
 
         System.out.println("\n+------------------------------+\n");
         System.out.println(ordem.toString());
+        System.out.println("\n+------------------------------+\n");
+    }
+
+    public static void printPeca(Peca peca) {
+
+        System.out.println("\n+------------------------------+\n");
+        System.out.println(peca.toString());
         System.out.println("\n+------------------------------+\n");
     }
 
@@ -64,6 +72,21 @@ public class PrintHelper {
         for (OrdemManutencao ordem : ordens) {
 
             System.out.println(ordem.toString());
+
+            System.out.println("\n+------------------------------+\n");
+        }
+    }
+
+    public static void printListaPecas(List<Peca> pecas) {
+
+        if (pecas.isEmpty()) {
+
+            MensagemHelper.erro("Nenhuma Peça cadastrada no Sistema.");
+        }
+
+        for (Peca peca : pecas) {
+
+            System.out.println(peca.toString());
 
             System.out.println("\n+------------------------------+\n");
         }

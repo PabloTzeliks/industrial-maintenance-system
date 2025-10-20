@@ -101,7 +101,7 @@ public class MaquinaDAO {
         return maquinas;
     }
 
-    public Optional<Maquina> buscarPorId(long id) {
+    public Optional<Maquina> buscarMaquinaPorId(long id) {
 
         String sql = """
                 SELECT id, nome, setor, status FROM Maquina WHERE id = ?;

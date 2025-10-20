@@ -57,4 +57,11 @@ public class MenuHelper {
 
         System.out.println("----- ASSOCIAR PEÇAS À ORDEM -----");
     }
+
+    public static void menuExecucaoDeManutencao() {
+
+        espacador();
+
+        System.out.println("----- EXECUTAR MANUTENÇÃO -----");
+    }
 }

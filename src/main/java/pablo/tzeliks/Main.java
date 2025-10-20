@@ -15,7 +15,6 @@ import pablo.tzeliks.view.helper.MensagemHelper;
 import pablo.tzeliks.view.helper.MenuHelper;
 import pablo.tzeliks.view.helper.PrintHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -308,5 +307,45 @@ public class Main {
                 return;
             }
         }
+    }
+
+    public static void executarManutencao(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO) {
+
+        sc.nextLine();
+
+        MenuHelper.menuExecucaoDeManutencao();
+
+        // Listagem de Ordens com Status Pendente
+
+        List<OrdemManutencao> ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);;
+
+        PrintHelper.printListaOrdensManutencao(ordensManutencaoPendentes);
+
+        // Escolhe a Ordem de Manutenção
+
+        MensagemHelper.subtitulo("Escolha de Ordem de Manutenção");
+
+        long ordemManutencaoId = InputHelper.lerLong(sc, "Digite o ID da Ordem de Manutenção desejada: ");
+        Optional<OrdemManutencao> ordemManutencaoOptional = ordemManutencaoDAO.buscarOrdemManutencaoPorId(ordemManutencaoId);
+
+        OrdemManutencao ordemManutencaoEscolhida;
+
+        if (ordemManutencaoOptional.isPresent()) {
+
+            ordemManutencaoEscolhida = ordemManutencaoOptional.get();
+
+            MensagemHelper.sucesso("Ordem de Manutencação de ID: " + ordemManutencaoId + ", foi selecionado.");
+
+            PrintHelper.printOrdemManutencao(ordemManutencaoEscolhida);
+        } else {
+
+            MensagemHelper.erro("Ordem de Manutenção de ID: " + ordemManutencaoId + ", não foi encotrada. Tente novamente.");
+
+            return;
+        }
+
+
+
+
     }
 }

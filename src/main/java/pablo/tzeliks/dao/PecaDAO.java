@@ -11,9 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class PecaDAO {
 
@@ -136,6 +134,117 @@ public class PecaDAO {
         } catch (SQLException e) {
 
             MensagemHelper.erro("Ocorreu um erro ao salvar uma associação de Peça com Ordem de Manutenção, observe:  " + e.getMessage());
+        }
+    }
+
+    public void execucaoManutencao(OrdemManutencao ordemManutencao) {
+
+        Map<Long, Double> estoque = new HashMap<>();
+
+        String sqlSelectOrdemPeca = """
+                SELECT idOrdem, idPeca, quantidade FROM OrdemPeca WHERE idOrdem = ?;
+                """;
+
+        String sqlUpdatePeca = """
+                UPDATE Peca SET estoque = estoque - ? WHERE id = ? AND estoque >= ?;
+                """;
+
+        String sqlUpdateOrdem = """
+                UPDATE OrdemManutencao SET status = 'EXECUTADA' WHERE id = ?;
+                """;
+
+        String sqlUpdateMaquina = """
+                UPDATE Maquina SET status = 'OPERACIONAL' WHERE id = ?;
+                """;
+
+        Connection conn = null;
+
+        try {
+            conn = Conexao.getConexao();
+
+            conn.setAutoCommit(false);
+
+            // Criação da Lista de Peças usadas na Ordem de Manutenção
+            try (PreparedStatement listagemStmt = conn.prepareStatement(sqlSelectOrdemPeca)) {
+
+                listagemStmt.setLong(1, ordemManutencao.getId());
+                ResultSet rs = listagemStmt.executeQuery();
+
+                while (rs.next()) {
+
+                    estoque.put(rs.getLong("idPeca"), rs.getDouble("quantidade"));
+                }
+            }
+
+            try (PreparedStatement updatePecaStmt = conn.prepareStatement(sqlUpdatePeca)) {
+
+                for (Map.Entry<Long, Double> item : estoque.entrySet()) {
+
+                    long idPeca = item.getKey();
+                    double quantidade = item.getValue();
+
+                    updatePecaStmt.setDouble(1, quantidade);
+                    updatePecaStmt.setLong(2, idPeca);
+                    updatePecaStmt.setDouble(3, quantidade);
+
+                    int linhasAfetadas = updatePecaStmt.executeUpdate();
+
+                    if (linhasAfetadas == 0) {
+                        throw new SQLException("Estoque insuficiente para a Peça " + idPeca + " de quantidade " + quantidade);
+                    }
+                }
+            }
+
+            try (PreparedStatement updateOrdemStmt = conn.prepareStatement(sqlUpdateOrdem)) {
+
+                updateOrdemStmt.setLong(1, ordemManutencao.getId());
+
+                updateOrdemStmt.executeUpdate();
+            }
+
+            try (PreparedStatement updateMaquinaStmt = conn.prepareStatement(sqlUpdateMaquina)) {
+
+                updateMaquinaStmt.setLong(1, ordemManutencao.getMaquina().getId());
+
+                updateMaquinaStmt.executeUpdate();
+            }
+
+            // Executa todas as alterações
+            conn.commit();
+
+        } catch(SQLException e) {
+
+            MensagemHelper.erro("Ocorreu um erro durante a Verificação de Estoque das Peças com a Ordem de Manutenção, observe: " + e.getMessage());
+
+            MensagemHelper.info("Desfazendo alterações.");
+
+            if (conn != null) {
+
+                try {
+                    conn.rollback();
+
+                    MensagemHelper.info("Alterações desfeitas.");
+                } catch (SQLException ex) {
+
+                    MensagemHelper.erro("Ocorreu um erro crítico ao tentar executar o Rollback." + ex.getMessage());
+                }
+            }
+
+        } finally {
+
+            if (conn != null) {
+
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    MensagemHelper.erro("Erro ao resetar autoCommit: " + ex.getMessage());
+                }
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    MensagemHelper.erro("Erro ao fechar a conexão: " + ex.getMessage());
+                }
+            }
         }
     }
 }

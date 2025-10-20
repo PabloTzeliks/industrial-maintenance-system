@@ -2,6 +2,7 @@ package pablo.tzeliks.dao;
 
 import pablo.tzeliks.dao.connection.Conexao;
 import pablo.tzeliks.model.Maquina;
+import pablo.tzeliks.model.OrdemManutencao;
 import pablo.tzeliks.model.Peca;
 import pablo.tzeliks.model.Tecnico;
 import pablo.tzeliks.view.helper.MensagemHelper;
@@ -115,5 +116,26 @@ public class PecaDAO {
         }
 
         return Optional.empty();
+    }
+
+    public void associarPeca(OrdemManutencao ordemManutencao, Peca peca, double quantidade) {
+
+        String sql = """
+                INSERT INTO OrdemPeca (idOrdem, idPeca, quantidade) VALUES (?, ?, ?);
+                """;
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, ordemManutencao.getId());
+            stmt.setLong(2, peca.getId());
+            stmt.setDouble(3, quantidade);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+
+            MensagemHelper.erro("Ocorreu um erro ao salvar uma associação de Peça com Ordem de Manutenção, observe:  " + e.getMessage());
+        }
     }
 }

@@ -241,15 +241,15 @@ public class Main {
         long ordemManutencaoId = InputHelper.lerLong(sc, "Digite o ID da Ordem de Manutenção desejada: ");
         Optional<OrdemManutencao> ordemManutencaoOptional = ordemManutencaoDAO.buscarOrdemManutencaoPorId(ordemManutencaoId);
 
-        OrdemManutencao ordemManutencao;
+        OrdemManutencao ordemManutencaoEscolhida;
 
         if (ordemManutencaoOptional.isPresent()) {
 
-            ordemManutencao = ordemManutencaoOptional.get();
+            ordemManutencaoEscolhida = ordemManutencaoOptional.get();
 
             MensagemHelper.sucesso("Ordem de Manutencação de ID: " + ordemManutencaoId + ", foi selecionado.");
 
-            PrintHelper.printOrdemManutencao(ordemManutencao);
+            PrintHelper.printOrdemManutencao(ordemManutencaoEscolhida);
         } else {
 
             MensagemHelper.erro("Ordem de Manutenção de ID: " + ordemManutencaoId + ", não foi encotrada. Tente novamente.");
@@ -259,29 +259,52 @@ public class Main {
 
         // Listagem de Peças
 
-        List<Peca> pecas = pecaDAO.listarPecas();
-        PrintHelper.printListaPecas(pecas);
+        while (true) {
+            MensagemHelper.subtitulo("Escolha de Peça");
 
-        // Escolha de Peça
+            List<Peca> pecas = pecaDAO.listarPecas();
+            PrintHelper.printListaPecas(pecas);
 
-        long pecaId = InputHelper.lerLong(sc,  "Digite o ID da Peca desejada: ");
-        Optional<Peca> pecaOptional = pecaDAO.buscarPecaPorId(pecaId);
+            // Escolha de Peça
 
-        Peca pecaEscolhida;
+            long pecaId = InputHelper.lerLong(sc,  "Digite o ID da Peca desejada: ");
+            Optional<Peca> pecaOptional = pecaDAO.buscarPecaPorId(pecaId);
 
-        if (pecaOptional.isPresent()) {
+            Peca pecaEscolhida;
 
-            pecaEscolhida = pecaOptional.get();
+            if (pecaOptional.isPresent()) {
 
-            MensagemHelper.sucesso("Peca de ID: " + pecaId + ", foi selecionado.");
+                pecaEscolhida = pecaOptional.get();
 
-            PrintHelper.printPeca(pecaEscolhida);
-        } else {
+                MensagemHelper.sucesso("Peca de ID: " + pecaId + ", foi selecionado.");
 
-            MensagemHelper.erro("Peca de ID: " + pecaId + ", não foi encontrada. Tente novamente.");
+                PrintHelper.printPeca(pecaEscolhida);
+            } else {
 
-            return;
+                MensagemHelper.erro("Peca de ID: " + pecaId + ", não foi encontrada. Tente novamente.");
+
+                continue;
+            }
+
+            // Quantidade necessária da Peça
+
+            double quantidadePeca = InputHelper.lerDouble(sc, "Digite a quantidade em Kilogramas desejada da Peça de ID " + pecaId + ": ");
+
+            // Criação da Associação
+
+            pecaDAO.associarPeca(ordemManutencaoEscolhida, pecaEscolhida, quantidadePeca);
+
+            MensagemHelper.sucesso("Peça associada a Ordem de Manutenção com Sucesso!");
+
+            // Decisão
+
+            long escolhaUsuario = InputHelper.lerLong(sc, "Digite 0 caso queira parar de adicionar Peças: ");
+
+            if (escolhaUsuario == 0) {
+                MensagemHelper.sucesso("Escolha de Peças finalizada.");
+
+                return;
+            }
         }
-
     }
 }

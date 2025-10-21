@@ -350,7 +350,7 @@ public class Main {
             PrintHelper.printOrdemManutencao(ordemManutencaoEscolhida);
         } else {
 
-            MensagemHelper.erro("Ordem de Manutenção de ID: " + ordemManutencaoId + ", não foi encotrada. Tente novamente.");
+            MensagemHelper.erro("Ordem de Manutenção de ID: " + ordemManutencaoId + ", não foi encontrada. Tente novamente.");
 
             return;
         }

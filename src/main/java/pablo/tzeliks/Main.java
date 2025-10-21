@@ -187,7 +187,7 @@ public class Main {
 
         if (tecnicos.isEmpty()) {
 
-            MensagemHelper.erro("Não há Máquinas no Sistema.");
+            MensagemHelper.erro("Não há Técnicos no Sistema.");
             return;
         }
 

@@ -51,6 +51,9 @@ public class Main {
                 case "5":
                     associarPecasOrdens(sc, ordemManutencaoDAO, pecaDAO);
                     break;
+                case "6":
+                    executarManutencao(sc, ordemManutencaoDAO, pecaDAO);
+                    break;
                 case "0":
                     MensagemHelper.info("Saindo...");
                     return;
@@ -258,6 +261,14 @@ public class Main {
             return;
         }
 
+        if (ordemManutencaoEscolhida.getStatus() != StatusOrdemManutencao.PENDENTE) {
+
+            MensagemHelper.erro("Não é possível associar peças. A Ordem " + ordemManutencaoId
+                    + " já está com o status: " + ordemManutencaoEscolhida.getStatus());
+
+            return;
+        }
+
         // Listagem de Peças
 
         while (true) {
@@ -309,7 +320,7 @@ public class Main {
         }
     }
 
-    public static void executarManutencao(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO) {
+    public static void executarManutencao(Scanner sc, OrdemManutencaoDAO ordemManutencaoDAO, PecaDAO pecaDAO) {
 
         sc.nextLine();
 
@@ -344,8 +355,6 @@ public class Main {
             return;
         }
 
-
-
-
+        pecaDAO.execucaoManutencao(ordemManutencaoEscolhida);
     }
 }

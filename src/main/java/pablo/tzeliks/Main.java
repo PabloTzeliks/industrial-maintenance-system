@@ -328,7 +328,7 @@ public class Main {
 
         // Listagem de Ordens com Status Pendente
 
-        List<OrdemManutencao> ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);;
+        List<OrdemManutencao> ordensManutencaoPendentes = ordemManutencaoDAO.listarOrdensPorStatus(StatusOrdemManutencao.PENDENTE);
 
         PrintHelper.printListaOrdensManutencao(ordensManutencaoPendentes);
 

@@ -251,7 +251,7 @@ public class Main {
 
             ordemManutencaoEscolhida = ordemManutencaoOptional.get();
 
-            MensagemHelper.sucesso("Ordem de Manutencação de ID: " + ordemManutencaoId + ", foi selecionado.");
+            MensagemHelper.sucesso("Ordem de Manutenção de ID: " + ordemManutencaoId + ", foi selecionado.");
 
             PrintHelper.printOrdemManutencao(ordemManutencaoEscolhida);
         } else {

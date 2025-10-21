@@ -74,7 +74,7 @@ public class OrdemManutencao {
                 "\nID Máquina: " + maquina.getId() +
                 "\nNome Máquina: " + maquina.getNome() +
                 "\nID Técnico: " + tecnico.getId() +
-                "\nNome Técnico: " + tecnico.getId() +
+                "\nNome Técnico: " + tecnico.getNome() +
                 "\nData de Solicitação: " + dataSolicitacao +
                 "\nStatus: " + status.name();
     }

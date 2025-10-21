@@ -17,6 +17,7 @@ public class MenuHelper {
         System.out.println("3- Cadastrar Peça");
         System.out.println("4- Criar Ordem de Manutenção");
         System.out.println("5- Associar Peças a uma Ordem");
+        System.out.println("6- Executar Manutenção");
 
         System.out.println("\n0- Sair do Sistema");
 

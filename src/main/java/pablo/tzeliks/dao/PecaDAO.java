@@ -174,6 +174,10 @@ public class PecaDAO {
 
                     estoque.put(rs.getLong("idPeca"), rs.getDouble("quantidade"));
                 }
+
+                if (estoque.isEmpty()) {
+                    throw new SQLException("Ocorreu um erro já que a tabela associativa de peças necessárias para execução da Ordem está vazia.");
+                }
             }
 
             try (PreparedStatement updatePecaStmt = conn.prepareStatement(sqlUpdatePeca)) {
@@ -199,18 +203,28 @@ public class PecaDAO {
 
                 updateOrdemStmt.setLong(1, ordemManutencao.getId());
 
-                updateOrdemStmt.executeUpdate();
+                int linhasAfetadas = updateOrdemStmt.executeUpdate();
+
+                if (linhasAfetadas == 0) {
+                    throw new SQLException("Ocorreu um erro ao alterar o Status da Ordem de Manutenção.");
+                }
             }
 
             try (PreparedStatement updateMaquinaStmt = conn.prepareStatement(sqlUpdateMaquina)) {
 
                 updateMaquinaStmt.setLong(1, ordemManutencao.getMaquina().getId());
 
-                updateMaquinaStmt.executeUpdate();
+                int linhasAfetadas = updateMaquinaStmt.executeUpdate();
+
+                if (linhasAfetadas == 0) {
+                    throw new SQLException("Ocorreu um erro ao alterar o Status da Máquina.");
+                }
             }
 
             // Executa todas as alterações
             conn.commit();
+
+            MensagemHelper.sucesso("Ordem de Manutenção executada com sucesso!");
 
         } catch(SQLException e) {
 

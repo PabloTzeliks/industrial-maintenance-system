@@ -66,7 +66,7 @@ public class PrintHelper {
 
         if (ordens.isEmpty()) {
 
-            MensagemHelper.erro("Nenhum Técnico cadastrado no Sistema.");
+            MensagemHelper.erro("Nenhuma Ordem de Manutenção cadastrada no Sistema.");
         }
 
         for (OrdemManutencao ordem : ordens) {
